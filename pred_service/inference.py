@@ -6,9 +6,17 @@ from PIL import Image
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.efficientnet import preprocess_input
 from .constants import IMG_SIZE, CLASS_NAMES
+from .downloader import download_model_if_missing
 
 # Try to load the model. We expect the user to place the .h5 file in this pred_service folder
 model_path = os.path.join(os.path.dirname(__file__), "plant_disease_recog_model_pwp.h5")
+
+# --- CLOUD DEPLOYMENT URL ---
+# Replace this with your Google Drive direct link, AWS S3 link, or Hugging Face model link!
+MODEL_URL = "https://drive.google.com/file/d/14y3Jp8-hB7v3q1HosU0cxOP9TM2e7h1j/view?usp=drive_link"
+
+# If the file is missing (e.g. during a fresh deployment online), try to download it first
+download_model_if_missing(model_path, MODEL_URL)
 
 # We defer failing until the prediction is called in case the file isn't there right at app startup
 model = None
