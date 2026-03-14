@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok && data.success) {
                     // For a real app, you would save JWT token to localStorage here
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    window.location.href = '/info';
+                    window.location.href = '/dashboard';
                 } else {
                     alert(data.detail || 'Login failed');
                     btn.innerHTML = 'Log In';

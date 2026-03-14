@@ -11,3 +11,10 @@ def read_root():
     if html_path.exists():
         return HTMLResponse(content=html_path.read_text('utf-8'), status_code=200)
     return {"Hello": "Frontend not found"}
+
+@router.get("/dashboard", response_class=HTMLResponse)
+def get_dashboard_page():
+    html_path = frontend_dir / "dashboard.html"
+    if html_path.exists():
+        return HTMLResponse(content=html_path.read_text('utf-8'), status_code=200)
+    return {"Error": "Dashboard page not found"}

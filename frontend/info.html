@@ -155,11 +155,11 @@
                         </svg>
                         Best Practices
                     </h3>
-                    <p>For the model to accurately detect early signs of blight, rust, and pests, please adhere to the following:</p>
+                    <p>For high accuracy, please follow these visual rules:</p>
                     <ul>
-                        <li style="color: #fff; font-weight: 500;">Take a clear, close-up photo of the affected <strong>Leaf</strong>.</li>
-                        <li><strong style="color: #ef4444;">Do NOT</strong> include the fruit or stalk of the plant in the frame.</li>
-                        <li>Ensure the background behind the leaf is as <strong>plain or solid</strong> as possible (e.g. against a piece of paper or clear ground).</li>
+                        <li style="color: #fff; font-weight: 500;">Use a <strong>Plain Background</strong> (Single color, solid).</li>
+                        <li>Focus on a <strong>single Leaf</strong> only.</li>
+                        <li><strong style="color: #ef4444;">No Fruit</strong> or other plant parts in view.</li>
                     </ul>
                 </div>
             </div>
@@ -182,8 +182,13 @@
         // Check if user is logged in
         document.addEventListener('DOMContentLoaded', () => {
             const userStr = localStorage.getItem('user');
-            const navAuth = document.getElementById('navAuth');
             
+            if (!userStr) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const navAuth = document.getElementById('navAuth');
             if (userStr && navAuth) {
                 const user = JSON.parse(userStr);
                 navAuth.innerHTML = `

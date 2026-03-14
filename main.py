@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import pathlib
 
 # Import routes
-from routers import home, upload, predict, auth, info
+from routers import home, upload, predict, auth, info, apikey
 from local_db.database import engine
 from local_db import models
 
@@ -35,6 +35,7 @@ app.include_router(info.router)
 app.include_router(upload.router)
 app.include_router(predict.router)
 app.include_router(auth.router)
+app.include_router(apikey.router)
 
 if __name__ == "__main__":
     import uvicorn
