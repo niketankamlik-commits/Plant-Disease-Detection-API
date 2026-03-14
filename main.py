@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import pathlib
 
 # Import routes
-from routers import home, upload, predict, auth
+from routers import home, upload, predict, auth, info
 from local_db.database import engine
 from local_db import models
 
@@ -31,6 +31,7 @@ except ImportError:
 
 # Register routers
 app.include_router(home.router)
+app.include_router(info.router)
 app.include_router(upload.router)
 app.include_router(predict.router)
 app.include_router(auth.router)

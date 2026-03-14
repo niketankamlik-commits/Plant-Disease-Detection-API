@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Info - PlantCare AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/style.css">
+    
+    <style>
+        .info-main {
+            min-height: 100vh;
+            padding: 8rem 1.5rem 4rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .info-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 3rem;
+        }
+
+        .info-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .info-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .info-card {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .info-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p, .info-card li {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .info-card ul {
+            padding-left: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .info-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .action-container {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .info-container {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animated">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+        <div class="noise-overlay"></div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" fill="#10B981"/>
+                    <path d="M12 22V12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="logo-text">PlantCare <span class="highlight">API</span></span>
+            </a>
+            
+            <div class="auth-buttons" id="navAuth">
+                <!-- Javascript will load user data here -->
+            </div>
+        </div>
+    </nav>
+
+    <main class="info-main">
+        <div class="info-container glass-panel fade-in-up">
+            
+            <div class="info-header">
+                <h1>Read Before <span class="highlight-gradient">Uploading</span></h1>
+                <p style="color: var(--text-muted); font-size: 1.1rem;">Please review our AI Model guidelines to ensure accurate disease detection.</p>
+            </div>
+
+            <div class="info-grid">
+                <!-- API Info Card -->
+                <div class="info-card">
+                    <h3>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        About The Model
+                    </h3>
+                    <p>Our backend inference engine is powered by an EfficientNet Convolutional Neural Network.</p>
+                    <ul>
+                        <li>Capable of identifying <strong>39</strong> distinct plant/disease combinations.</li>
+                        <li>Processes imagery internally at 160x160 resolution.</li>
+                        <li>Uses deep feature extraction for highly accurate confidence scoring.</li>
+                    </ul>
+                </div>
+
+                <!-- Guidance Card -->
+                <div class="info-card" style="border-color: var(--primary);">
+                    <h3>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        Best Practices
+                    </h3>
+                    <p>For the model to accurately detect early signs of blight, rust, and pests, please adhere to the following:</p>
+                    <ul>
+                        <li style="color: #fff; font-weight: 500;">Take a clear, close-up photo of the affected <strong>Leaf</strong>.</li>
+                        <li><strong style="color: #ef4444;">Do NOT</strong> include the fruit or stalk of the plant in the frame.</li>
+                        <li>Ensure the background behind the leaf is as <strong>plain or solid</strong> as possible (e.g. against a piece of paper or clear ground).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="action-container">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Ready to diagnose your plant?</p>
+                <a href="/upload" class="btn btn-primary btn-large">
+                    I Understand, Proceed to Upload
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('user');
+            const navAuth = document.getElementById('navAuth');
+            
+            if (userStr && navAuth) {
+                const user = JSON.parse(userStr);
+                navAuth.innerHTML = `
+                    <span style="color: var(--text-muted); margin-right: 15px;">Welcome, ${user.name}</span>
+                    <button class="btn btn-ghost" onclick="logout()">Logout</button>
+                `;
+            } else if (navAuth) {
+                navAuth.innerHTML = `
+                    <a href="/login" class="btn btn-ghost">Login</a>
+                `;
+            }
+
+            // Animate Blob follow mouse
+            const blobs = document.querySelectorAll('.blob');
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                blobs.forEach((blob, index) => {
+                    const speed = (index + 1) * 20;
+                    blob.style.transform = `translate(${(x - 0.5) * speed}px, ${(y - 0.5) * speed}px)`;
+                });
+            });
+        });
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+    </script>
+</body>
+</html>
