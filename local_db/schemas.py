@@ -4,16 +4,24 @@ from typing import List, Optional
 
 # API Key Schemas
 class APIKeyBase(BaseModel):
-    key: str
+    name: str
+
+class APIKeyName(BaseModel):
+    name: str
 
 class APIKeyCreate(APIKeyBase):
     pass
 
-class APIKeyOut(APIKeyBase):
+class APIKeyOut(BaseModel):
     id: int
+    key: str
+    name: Optional[str]
     user_id: int
     created_at: datetime
     expires_at: Optional[datetime]
+    last_used: Optional[datetime]
+    usage_count: int
+    usage_limit: int
     is_active: bool
 
     class Config:
@@ -40,10 +48,12 @@ class HistoryBase(BaseModel):
 
 class HistoryCreate(HistoryBase):
     user_id: int
+    api_key_id: Optional[int] = None
 
 class HistoryOut(HistoryBase):
     id: int
     user_id: int
+    api_key_id: Optional[int] = None
     created_at: datetime
 
     class Config:
@@ -53,6 +63,7 @@ class HistoryOut(HistoryBase):
 class UserOut(UserBase):
     id: int
     is_active: bool
+    plan_type: str
     api_keys: List[APIKeyOut] = []
     history: List[HistoryOut] = []
 

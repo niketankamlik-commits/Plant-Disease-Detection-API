@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 import bcrypt
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 def get_password_hash(password: str) -> str:
     # bcrypt requires bytes, so we encode the string
@@ -32,17 +32,24 @@ def create_user(db: Session, user: schemas.UserCreate):
 def get_api_keys(db: Session, user_id: int):
     return db.query(models.APIKey).filter(models.APIKey.user_id == user_id).all()
 
-def create_api_key(db: Session, user_id: int, user_name: str):
+def count_active_keys(db: Session, user_id: int):
+    return db.query(models.APIKey).filter(
+        models.APIKey.user_id == user_id,
+        models.APIKey.is_active == True
+    ).count()
+
+def create_api_key(db: Session, user_id: int, user_name: str, key_name: str):
     # Generate a unique key
     new_key = str(uuid.uuid4()).replace("-", "")
     
     expires_at = None
     # If not admin 'niket', set expiry to 2 months (60 days)
     if user_name.lower() != "niket":
-        expires_at = datetime.utcnow() + timedelta(days=60)
+        expires_at = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(days=60)
     
     db_key = models.APIKey(
         key=new_key,
+        name=key_name,
         user_id=user_id,
         expires_at=expires_at
     )
@@ -57,10 +64,17 @@ def validate_api_key(db: Session, key: str):
         return None
     
     # Check if expired
-    if db_key.expires_at and db_key.expires_at < datetime.utcnow():
+    if db_key.expires_at and db_key.expires_at < datetime.now(timezone.utc).replace(tzinfo=None):
         return None
         
     return db_key.owner
+
+def increment_key_usage(db: Session, db_key: models.APIKey):
+    db_key.usage_count += 1
+    db_key.last_used = datetime.now(timezone.utc).replace(tzinfo=None)
+    db.commit()
+    db.refresh(db_key)
+    return db_key
 
 # History Operations
 def get_user_history(db: Session, user_id: int):

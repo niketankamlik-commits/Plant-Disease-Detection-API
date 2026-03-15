@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation — Phyto-Scan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/style.css">
+    <style>
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+        .code-block { background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--glass-border); position: relative; margin: 1.5rem 0; }
+        .copy-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-muted); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .copy-btn:hover { background: var(--primary); color: #fff; }
+        .doc-section { margin-bottom: 4rem; }
+        .method { background: var(--primary); color: #fff; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 700; font-size: 0.75rem; vertical-align: middle; margin-right: 0.5rem; }
+        .endpoint { color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="bg-animated">
+        <div class="hero-bg-image"></div>
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+        <div class="noise-overlay"></div>
+    </div>
+
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="/" class="logo" style="text-decoration: none; color: inherit;">
+                <img src="/frontend/logo.png" alt="Phyto-Scan Logo" class="logo-image" style="height: 48px; width: auto;">
+                <span class="logo-text">PHYTO-<span class="highlight">SCAN</span></span>
+            </a>
+            <div class="auth-buttons" id="navAuth">
+                <a href="/login" class="btn btn-ghost" style="text-decoration: none;">Login</a>
+                <a href="/" class="btn btn-primary" style="text-decoration: none;">Back Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="auth-main" style="padding-top: 8rem; min-height: auto; text-align: left; align-items: flex-start; max-width: 1000px; margin: 0 auto;">
+        <div class="docs-header fade-in-blur">
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">API <span class="highlight">Reference</span></h1>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Build powerful plant analysis apps with the Phyto-Scan engine.</p>
+        </div>
+
+        <div class="doc-section fade-in-blur stagger-1">
+            <h2>Authentication</h2>
+            <p>Phyto-Scan uses API Keys to authenticate requests. You can view and manage your keys in your dashboard. All API requests must be made over HTTPS.</p>
+            <p>Authentication is performed by passing a <code>X-API-KEY</code> header.</p>
+            
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <code style="color: #6EE7B7;">X-API-KEY: YOUR_API_KEY_HERE</code>
+            </div>
+        </div>
+
+        <div class="doc-section fade-in-blur stagger-2">
+            <h2>Disease Prediction</h2>
+            <p><span class="method">POST</span> <span class="endpoint">/api/predict</span></p>
+            <p>Analyze a plant leaf image and receive detection results.</p>
+            
+            <h3>Parameters</h3>
+            <ul style="color: var(--text-muted); margin-bottom: 1.5rem;">
+                <li><code>file</code> (Form Data) - The image file (JPEG, PNG, WEBP)</li>
+            </ul>
+
+            <h3>Example with Python</h3>
+            <div class="code-block">
+                <button class="copy-btn">Copy</button>
+                <code style="color: #6EE7B7; white-space: pre-wrap;">
+import requests
+
+url = "http://127.0.0.1:8000/api/predict"
+files = {'file': open('leaf.jpg', 'rb')}
+headers = {'X-API-KEY': 'your_secret_key'}
+
+response = requests.post(url, files=files, headers=headers)
+print(response.json())
+                </code>
+            </div>
+
+            <h3>Successful Response</h3>
+            <div class="code-block">
+                <code style="color: #FBBF24; white-space: pre-wrap;">
+{
+  "success": true,
+  "disease_name": "Tomato - Late Blight",
+  "confidence": 98.45,
+  "is_healthy": false,
+  "recommendation": "Isolate the plant..."
+}
+                </code>
+            </div>
+        </div>
+    </main>
+
+    <script src="/frontend/script.js"></script>
+</body>
+</html>

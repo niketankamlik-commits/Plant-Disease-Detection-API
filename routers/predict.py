@@ -29,6 +29,12 @@ async def predict_disease(
         user = crud.validate_api_key(db, x_api_key)
         if not user:
             raise HTTPException(status_code=401, detail="Invalid or expired API Key")
+        
+        # Get the key object to check usage
+        db_key = db.query(database.models.APIKey).filter(database.models.APIKey.key == x_api_key).first()
+        if db_key and db_key.usage_count >= db_key.usage_limit:
+            raise HTTPException(status_code=429, detail="API Quota Exhausted. Please upgrade your plan.")
+        
         user_name = user.name
 
     try:
@@ -38,23 +44,27 @@ async def predict_disease(
         # Delegate task to the prediction service
         result = process_image_and_predict(contents)
         
-        # Save to history if user is authenticated
-        if x_api_key:
-            db_key = db.query(database.models.APIKey).filter(database.models.APIKey.key == x_api_key).first()
-            if db_key:
-                crud.create_history_entry(db, schemas.HistoryCreate(
-                    user_id=db_key.user_id,
-                    disease_name=result.get("label", "Unknown"),
-                    confidence=int(result.get("confidence", 0)),
-                    recommendation=result.get("recommendation", "No data")
-                ))
+        # Save to history & Increment usage if user is authenticated
+        if x_api_key and db_key:
+            # Increment usage
+            crud.increment_key_usage(db, db_key)
+            
+            # Save history linked to key
+            crud.create_history_entry(db, schemas.HistoryCreate(
+                user_id=db_key.user_id,
+                api_key_id=db_key.id,
+                disease_name=result.get("disease_name", "Unknown"),
+                confidence=int(result.get("confidence", 0)),
+                recommendation=result.get("recommendation", "No data")
+            ))
 
         # Return standardized JSON response
         return JSONResponse(content={
             "success": True,
-            "prediction": result.get("label", "Unknown"),
-            "confidence": float(result.get("confidence", 0)),
+            "disease_name": result.get("disease_name", "Unknown"),
+            "confidence": round(float(result.get("confidence", 0)), 2),
             "recommendation": result.get("recommendation", "No data"),
+            "is_healthy": result.get("is_healthy", False),
             "source": user_name
         })
             

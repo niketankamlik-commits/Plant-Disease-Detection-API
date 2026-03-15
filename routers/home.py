@@ -18,3 +18,17 @@ def get_dashboard_page():
     if html_path.exists():
         return HTMLResponse(content=html_path.read_text('utf-8'), status_code=200)
     return {"Error": "Dashboard page not found"}
+
+@router.get("/pricing", response_class=HTMLResponse)
+def get_pricing_page():
+    html_path = frontend_dir / "pricing.html"
+    if html_path.exists():
+        return HTMLResponse(content=html_path.read_text('utf-8'), status_code=200)
+    return {"Error": "Pricing page not found"}
+
+@router.get("/docs", response_class=HTMLResponse)
+def get_docs_page():
+    html_path = frontend_dir / "docs.html"
+    if html_path.exists():
+        return HTMLResponse(content=html_path.read_text('utf-8'), status_code=200)
+    return {"Error": "Docs page not found"}

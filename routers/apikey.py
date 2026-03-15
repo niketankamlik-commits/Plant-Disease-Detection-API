@@ -14,13 +14,22 @@ def get_db():
         db.close()
 
 @router.post("/generate", response_model=schemas.APIKeyOut)
-def generate_key(user_id: int, user_name: str, db: Session = Depends(get_db)):
+def generate_key(user_id: int, user_name: str, key_name: str, db: Session = Depends(get_db)):
     """
     Generates a new API key for the user.
-    Admin 'niket' gets lifetime keys (no expiry).
-    Others get 2-month expiry.
+    Admin 'niket' gets lifetime keys (no expiry) and unlimited keys.
+    Others get 2-month expiry and are limited to 5 active keys.
     """
-    return crud.create_api_key(db, user_id=user_id, user_name=user_name)
+    # Enforce limit for non-admin users
+    if user_name.lower() != "niket":
+        active_count = crud.count_active_keys(db, user_id=user_id)
+        if active_count >= 5:
+            raise HTTPException(
+                status_code=403, 
+                detail="Key limit reached. Regular users are limited to 5 active API keys."
+            )
+            
+    return crud.create_api_key(db, user_id=user_id, user_name=user_name, key_name=key_name)
 
 @router.get("/", response_model=List[schemas.APIKeyOut])
 def list_keys(user_id: int, db: Session = Depends(get_db)):

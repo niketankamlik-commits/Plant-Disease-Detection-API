@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlantCare AI - Disease Detection</title>
+    <title>Phyto-Scan — Plant Disease Detection</title>
+    <meta name="description" content="Upload a photo of your plant's leaves and get instant AI-powered disease diagnosis and treatment recommendations.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,18 +14,19 @@
     <div id="loader" class="loader-overlay">
         <div class="loader-content">
             <div class="leaf-loader">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="leaf-svg">
+                <svg viewBox="0 0 24 24" fill="none" class="leaf-svg">
                     <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" fill="#10B981" class="leaf-pulse"/>
-                    <path d="M12 22V12" stroke="#064E3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 22V12" stroke="#064E3B" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
                 <div class="pulse-ring"></div>
             </div>
-            <h2>Initializing PlantCare AI</h2>
-            <p>Preparing detection models...</p>
+            <h2 style="font-size: 1.25rem; margin: 0;">Phyto-Scan</h2>
+            <p style="margin: 0; font-size: 0.9rem;">Initializing AI detection engine...</p>
         </div>
     </div>
 
     <div class="bg-animated">
+        <div class="hero-bg-image"></div>
         <div class="blob blob1"></div>
         <div class="blob blob2"></div>
         <div class="blob blob3"></div>
@@ -33,51 +35,120 @@
 
     <nav class="glass-nav">
         <div class="nav-container">
-            <div class="logo">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" fill="#10B981"/>
-                    <path d="M12 22V12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span class="logo-text">PlantCare <span class="highlight">API</span></span>
-            </div>
-            <div class="auth-buttons" id="navAuth">
-                <a href="/login" class="btn btn-ghost" style="text-decoration: none;">Login</a>
-                <a href="/register" class="btn btn-outline" style="text-decoration: none;">Register</a>
+            <a href="/" class="logo" style="text-decoration: none; color: inherit;">
+                <img src="/frontend/logo.png" alt="Phyto-Scan Logo" class="logo-image" style="height: 44px; width: auto;">
+                <span class="logo-text">PHYTO-<span class="highlight">SCAN</span></span>
+            </a>
+            <div style="display: flex; gap: 2rem; align-items: center;">
+                <!-- Pricing and Docs hidden for initial launch as per user request -->
+                <!-- <div class="nav-links" style="display: flex; gap: 1.5rem; font-size: 0.9rem; font-weight: 500;">
+                    <a href="/pricing" style="text-decoration: none; color: var(--text-muted); transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Pricing</a>
+                    <a href="/docs" style="text-decoration: none; color: var(--text-muted); transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Docs</a>
+                </div> -->
+                <div class="auth-buttons" id="navAuth">
+                    <a href="/login" class="btn btn-ghost" style="text-decoration: none;">Login</a>
+                    <a href="/register" class="btn btn-primary" style="text-decoration: none;">Get Started</a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="hero">
-        <div class="hero-container">
-            <div class="hero-content glass-panel fade-in-up">
+    <main class="hero" style="min-height: 80vh; padding: 6rem 2rem 2rem;">
+        <div class="hero-container" style="gap: 2rem;">
+            <!-- LEFT: Content -->
+            <div class="hero-content fade-in-blur stagger-1">
                 <div class="badge">
-                    <span class="pulse-dot"></span> API Status: Online
+                    <span class="pulse-dot"></span> AI Model Active &amp; Ready
                 </div>
-                <h1>Diagnose Plant Health in <span class="highlight-gradient">Real-Time</span></h1>
-                <p>Upload a photo of your plant's leaves. Our advanced computer vision engine will instantly identify diseases, nutrient deficiencies, and recommend treatments.</p>
+                <h1>Detect Plant<br>Disease <span class="highlight">Instantly</span></h1>
+                <p>Upload a photo of any plant leaf. Our advanced computer vision engine identifies diseases, nutrient deficiencies, and delivers actionable treatment plans in seconds.</p>
+
+                <!-- Feature highlights -->
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        </div>
+                        <span>Instant results</span>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                        </div>
+                        <span>38 plant species</span>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="hero-feature-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <span>High accuracy</span>
+                    </div>
+                </div>
+
                 <div class="cta-group">
-                    <a href="/upload" class="btn btn-primary btn-large" style="text-decoration: none;">
-                        Upload Plant Image
+                    <a href="/upload" class="btn btn-primary btn-large btn-glow" style="text-decoration: none; display: flex; align-items: center; gap: 0.6rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                        Scan a Plant Now
                     </a>
                     <div class="guest-note">
-                        <span>No login required to try</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span>Free to use &mdash; no account needed</span>
                     </div>
                 </div>
             </div>
 
-            <div class="hero-visual glass-panel fade-in-up delay-1">
+            <!-- RIGHT: Animated Scanner Visual -->
+            <div class="hero-visual glass-panel fade-in-blur stagger-2">
                 <div class="scanner-ui">
+                    <!-- Top status bar -->
+                    <div class="scanner-header">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse-dot 2s infinite;"></div>
+                            <span style="font-size: 0.75rem; color: var(--primary); font-weight: 600; letter-spacing: 1px;">SCANNING</span>
+                        </div>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">Model v2.1</span>
+                    </div>
+                    <!-- Leaf image area -->
                     <div class="mock-image-container">
                         <svg class="abstract-leaf" viewBox="0 0 100 100" fill="none">
-                            <path d="M50 90C50 90 85 75 85 50C85 25 50 10 50 10C50 10 15 25 15 50C15 75 50 90 50 90Z" fill="var(--glass-bg)" stroke="#10B981" stroke-width="3"/>
-                            <circle cx="35" cy="45" r="4" fill="#F59E0B" class="spot"/>
-                            <circle cx="65" cy="55" r="3" fill="#F59E0B" class="spot"/>
+                            <!-- Leaf shape filled -->
+                            <path d="M50 90C50 90 85 75 85 50C85 25 50 10 50 10C50 10 15 25 15 50C15 75 50 90 50 90Z" fill="rgba(16,185,129,0.08)" stroke="#10B981" stroke-width="1.5"/>
+                            <!-- Leaf veins -->
+                            <path d="M50 85V15" stroke="rgba(16,185,129,0.3)" stroke-width="0.8" stroke-linecap="round"/>
+                            <path d="M50 45Q35 38 25 30" stroke="rgba(16,185,129,0.2)" stroke-width="0.6" stroke-linecap="round"/>
+                            <path d="M50 55Q35 50 22 48" stroke="rgba(16,185,129,0.2)" stroke-width="0.6" stroke-linecap="round"/>
+                            <path d="M50 65Q35 62 28 60" stroke="rgba(16,185,129,0.2)" stroke-width="0.6" stroke-linecap="round"/>
+                            <path d="M50 45Q65 38 75 30" stroke="rgba(16,185,129,0.2)" stroke-width="0.6" stroke-linecap="round"/>
+                            <path d="M50 55Q65 50 78 48" stroke="rgba(16,185,129,0.2)" stroke-width="0.6" stroke-linecap="round"/>
+                            <path d="M50 65Q65 62 72 60" stroke="rgba(16,185,129,0.2)" stroke-width="0.6" stroke-linecap="round"/>
+                            <!-- Disease spots -->
+                            <circle cx="35" cy="42" r="5" fill="rgba(245,158,11,0.25)" stroke="#F59E0B" stroke-width="1" class="spot"/>
+                            <circle cx="62" cy="57" r="4" fill="rgba(245,158,11,0.25)" stroke="#F59E0B" stroke-width="1" class="spot"/>
+                            <circle cx="40" cy="65" r="3" fill="rgba(239,68,68,0.2)" stroke="#EF4444" stroke-width="0.8" class="spot"/>
+                            <!-- Crosshair targeting the main spot -->
+                            <circle cx="35" cy="42" r="10" fill="none" stroke="rgba(245,158,11,0.5)" stroke-width="0.8" stroke-dasharray="2 2" class="spot"/>
                         </svg>
                         <div class="scan-line"></div>
+                        <!-- Corner brackets -->
+                        <div class="scan-corner tl"></div>
+                        <div class="scan-corner tr"></div>
+                        <div class="scan-corner bl"></div>
+                        <div class="scan-corner br"></div>
                     </div>
+                    <!-- Animated results -->
                     <div class="scanner-results">
-                        <div class="result-item loading-skeleton"></div>
-                        <div class="result-item loading-skeleton short"></div>
+                        <div class="result-row">
+                            <span class="result-label">Disease</span>
+                            <div class="loading-skeleton" style="width: 55%; height: 10px;"></div>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Confidence</span>
+                            <div class="loading-skeleton" style="width: 35%; height: 10px;"></div>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Treatment</span>
+                            <div class="loading-skeleton" style="width: 70%; height: 10px;"></div>
+                        </div>
                     </div>
                 </div>
             </div>

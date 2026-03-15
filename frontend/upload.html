@@ -11,6 +11,7 @@
 </head>
 <body>
     <div class="bg-animated">
+        <div class="hero-bg-image"></div>
         <div class="blob blob1"></div>
         <div class="blob blob2"></div>
         <div class="blob blob3"></div>
@@ -20,11 +21,8 @@
     <nav class="glass-nav">
         <div class="nav-container">
             <a href="/" class="logo" style="text-decoration: none; color: inherit;">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" fill="#10B981"/>
-                    <path d="M12 22V12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span class="logo-text">PlantCare <span class="highlight">API</span></span>
+                <img src="/frontend/logo.png" alt="Phyto-Scan Logo" class="logo-image" style="height: 48px; width: auto; filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));">
+                <span class="logo-text">PHYTO-<span class="highlight">SCAN</span></span>
             </a>
             <div class="auth-buttons" id="navAuth">
                 <a href="/login" class="btn btn-ghost" style="text-decoration: none;">Login</a>
@@ -34,7 +32,7 @@
     </nav>
 
     <main class="upload-main">
-        <div class="upload-container glass-panel fade-in-up">
+        <div class="upload-container glass-panel fade-in-blur stagger-1">
             <div class="upload-header">
                 <h2>Plant Analysis <span class="highlight">Portal</span></h2>
                 <p>Upload a clear image of the affected plant leaf for accurate disease detection.</p>
@@ -72,20 +70,47 @@
                 </div>
                 
                 <div class="results-content" id="resultsContent" style="display: none;">
-                    <div class="result-card glass-panel-inner">
-                        <div class="result-header">
-                            <div class="status-indicator healthy" id="resultStatus"></div>
-                            <h3 id="diseaseName">Analysis Complete</h3>
+                    <div class="result-card">
+                        <!-- Status Header -->
+                        <div class="result-status-header">
+                            <div class="result-status-badge" id="resultStatus">
+                                <span id="resultLabel">Analysis Complete</span>
+                            </div>
                         </div>
-                        <div class="confidence-bar">
-                            <div class="confidence-fill" id="confidenceLevel" style="width: 0%;"></div>
+
+                        <!-- Disease Name -->
+                        <div class="result-disease-block">
+                            <p class="result-meta-label">Detected Condition</p>
+                            <h2 id="diseaseName" class="result-disease-name">—</h2>
                         </div>
-                        <p class="confidence-text">Confidence: <span id="confidenceText">--%</span></p>
+
+                        <!-- Confidence Bar -->
+                        <div class="result-confidence-block">
+                            <div class="result-confidence-header">
+                                <span class="result-meta-label">Confidence Score</span>
+                                <span id="confidenceText" class="result-confidence-value">—</span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidenceLevel" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Recommendation -->
                         <div class="recommendation-box">
-                            <h4>Recommended Action</h4>
-                            <p id="recommendationText">Awaiting analysis...</p>
+                            <div class="recommendation-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div>
+                                <h4>Recommended Action</h4>
+                                <p id="recommendationText">Awaiting analysis...</p>
+                            </div>
                         </div>
-                        <button class="btn btn-outline w-100 mt-4" id="resetBtn">Analyze Another Image</button>
+
+                        <!-- Reset Button -->
+                        <button class="btn btn-outline w-100" id="resetBtn" style="margin-top: 1.5rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.36"/></svg>
+                            Scan Another Plant
+                        </button>
                     </div>
                 </div>
             </div>

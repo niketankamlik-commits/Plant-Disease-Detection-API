@@ -11,6 +11,7 @@
 </head>
 <body>
     <div class="bg-animated">
+        <div class="hero-bg-image"></div>
         <div class="blob blob1"></div>
         <div class="blob blob2"></div>
         <div class="blob blob3"></div>
@@ -20,11 +21,8 @@
     <nav class="glass-nav">
         <div class="nav-container">
             <a href="/" class="logo" style="text-decoration: none; color: inherit;">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" fill="#10B981"/>
-                    <path d="M12 22V12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span class="logo-text">PlantCare <span class="highlight">API</span></span>
+                <img src="/frontend/logo.png" alt="Phyto-Scan Logo" class="logo-image" style="height: 48px; width: auto; filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));">
+                <span class="logo-text">PHYTO-<span class="highlight">SCAN</span></span>
             </a>
             <div class="auth-buttons" id="navAuth">
                 <button class="btn btn-ghost">Loading...</button>
@@ -33,10 +31,14 @@
     </nav>
 
     <main class="dashboard-main">
-        <div class="dashboard-container">
-            <aside class="sidebar fade-in-up">
+        <div class="dashboard-container" style="max-width: 1200px; gap: 3rem;">
+            <aside class="sidebar fade-in-blur stagger-1">
                 <div class="sidebar-group">
-                    <button onclick="switchSection('keys')" id="nav-keys" class="sidebar-item active">
+                    <button onclick="switchSection('overview')" id="nav-overview" class="sidebar-item active">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        Overview
+                    </button>
+                    <button onclick="switchSection('keys')" id="nav-keys" class="sidebar-item">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         API Keys
                     </button>
@@ -49,26 +51,83 @@
                         My Profile
                     </button>
                     <hr class="sidebar-divider">
-                    <a href="/info" class="sidebar-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
-                        Best Practices
+                    <a href="/docs" class="sidebar-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        Documentation
                     </a>
-                    <a href="/upload" class="sidebar-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                        Manual Scan
-                    </a>
+                    <!-- Pricing hidden for now -->
+                    <!-- <a href="/pricing" class="sidebar-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        Pricing Plans
+                    </a> -->
                 </div>
             </aside>
 
-            <section class="content-area glass-panel fade-in-up delay-1">
+            <section class="content-area glass-panel fade-in-blur stagger-2">
+                <!-- Overview Section -->
+                <div id="section-overview" class="dashboard-section">
+                    <div class="section-header">
+                        <div>
+                            <h2>Welcome, <span id="welcome-name" class="highlight">Developer</span></h2>
+                            <p>Here is your API usage overview for this month.</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                        <div class="stat-card glass-panel" style="padding: 1.5rem; text-align: left;">
+                            <p class="result-meta-label">Total Requests</p>
+                            <h3 id="stat-total-requests" style="font-size: 2rem;">0</h3>
+                            <div class="mini-trend" style="color: #10B981; font-size: 0.8rem; margin-top: 0.5rem;">↑ 12% from last week</div>
+                        </div>
+                        <div class="stat-card glass-panel" style="padding: 1.5rem; text-align: left;">
+                            <p class="result-meta-label">Success Rate</p>
+                            <h3 id="stat-success-rate" style="font-size: 2rem;">99.8%</h3>
+                            <div class="mini-trend" style="color: #10B981; font-size: 0.8rem; margin-top: 0.5rem;">Stable</div>
+                        </div>
+                        <!-- Quota stats hidden for now -->
+                        <!-- <div class="stat-card glass-panel" style="padding: 1.5rem; text-align: left;">
+                            <p class="result-meta-label">Plan Quota</p>
+                            <h3 id="stat-quota-count" style="font-size: 2rem;">0/1000</h3>
+                            <div class="confidence-bar" style="height: 6px; margin-top: 0.8rem;">
+                                <div class="confidence-fill" id="stat-quota-bar" style="width: 0%;"></div>
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <div class="mt-4 glass-panel" style="padding: 2rem;">
+                        <h3 style="margin-bottom: 1.5rem;">Quickstart Guide</h3>
+                        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 250px;">
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">1. Get your Key</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-muted);">Navigate to the <a href="#" onclick="switchSection('keys')">API Keys</a> tab to generate your client secret.</p>
+                            </div>
+                            <div style="flex: 1; min-width: 250px;">
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">2. Integrate</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-muted);">Use our <a href="/docs">REST API</a> to analyze images from any application.</p>
+                            </div>
+                            <div style="flex: 1; min-width: 250px;">
+                                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">3. Scale</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-muted);">Monitor usage here and <a href="/pricing">upgrade</a> as your traffic grows.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- API Keys Section -->
-                <div id="section-keys" class="dashboard-section">
+                <div id="section-keys" class="dashboard-section" style="display: none;">
                     <div class="section-header">
                         <div>
                             <h2>API <span class="highlight">Management</span></h2>
                             <p>Manage your access keys for programmatic disease detection.</p>
                         </div>
-                        <button class="btn btn-primary" onclick="generateNewKey()">+ Generate New Key</button>
+                        <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 0.5rem 0.5rem 0.5rem 1rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="opacity: 0.7;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <input type="text" id="key-name-input" class="glass-input" placeholder="Name your key (e.g. Web App)" style="max-width: 250px; border: none; background: transparent; box-shadow: none; padding: 0; outline: none; color: #fff; font-size: 0.95rem;">
+                            <button class="btn btn-primary" onclick="generateNewKey()" style="border-radius: 50px; padding: 0.5rem 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Generate
+                            </button>
+                        </div>
                     </div>
 
                     <div id="keysList">

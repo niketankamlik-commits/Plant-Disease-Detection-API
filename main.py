@@ -9,7 +9,7 @@ from local_db import models
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 
 # Make sure frontend dir exists conceptually
 frontend_dir = pathlib.Path("frontend")

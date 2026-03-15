@@ -11,6 +11,7 @@
 </head>
 <body>
     <div class="bg-animated">
+        <div class="hero-bg-image"></div>
         <div class="blob blob1"></div>
         <div class="blob blob2"></div>
         <div class="blob blob3"></div>
@@ -20,11 +21,8 @@
     <nav class="glass-nav">
         <div class="nav-container">
             <a href="/" class="logo" style="text-decoration: none; color: inherit;">
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" fill="#10B981"/>
-                    <path d="M12 22V12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span class="logo-text">PlantCare <span class="highlight">API</span></span>
+                <img src="/frontend/logo.png" alt="Phyto-Scan Logo" class="logo-image" style="height: 48px; width: auto; filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));">
+                <span class="logo-text">PHYTO-<span class="highlight">SCAN</span></span>
             </a>
             <div class="auth-buttons">
                 <a href="/register" class="btn btn-outline" style="text-decoration: none;">Register</a>
@@ -33,7 +31,7 @@
     </nav>
 
     <main class="auth-main">
-        <div class="auth-container glass-panel fade-in-up">
+        <div class="auth-container glass-panel fade-in-blur stagger-1">
             <div class="auth-header">
                 <h2>Welcome <span class="highlight">Back</span></h2>
                 <p>Log in to access your plant health history.</p>

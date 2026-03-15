@@ -1,5 +1,5 @@
 /**
- * PlantCare AI - Unified Application Logic
+ * Phyto-Scan - Unified Application Logic
  * Consolidates: script.js, auth.js, upload.js, info.js, dashboard.js
  */
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 3. Auth Guard & User State (Shared) ---
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
     const navAuth = document.getElementById('navAuth');
     
     // Auth Guard for Info/Dashboard/Upload (if needed)
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await res.json();
                 if (res.ok && data.success) {
-                    localStorage.setItem('user', JSON.stringify(data.user));
+                    sessionStorage.setItem('user', JSON.stringify(data.user));
                     window.location.href = '/dashboard';
                 } else {
                     alert(data.detail || 'Login failed');
@@ -170,10 +170,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const showResults = (data) => {
             analyzingContent.style.display = 'none';
             resultsContent.style.display = 'flex';
-            document.getElementById('diseaseName').textContent = data.disease_name || 'Done';
-            document.getElementById('confidenceText').textContent = `${data.confidence}%`;
-            document.getElementById('confidenceLevel').style.width = `${data.confidence}%`;
-            document.getElementById('recommendationText').textContent = data.recommendation || 'No specific recommendation.';
+
+            const diseaseName = data.disease_name || 'Unknown';
+            const confidence = parseFloat(data.confidence || 0).toFixed(2);
+            const recommendation = data.recommendation || 'No specific recommendation.';
+            const isHealthy = data.is_healthy || diseaseName.toLowerCase().includes('healthy');
+
+            document.getElementById('diseaseName').textContent = diseaseName;
+            document.getElementById('confidenceText').textContent = `${confidence}%`;
+            document.getElementById('confidenceLevel').style.width = `${Math.round(confidence)}%`;
+            document.getElementById('recommendationText').textContent = recommendation;
+
+            // Color the status indicator based on result
+            const statusEl = document.getElementById('resultStatus');
+            if (statusEl) {
+                statusEl.classList.remove('healthy', 'diseased');
+                statusEl.classList.add(isHealthy ? 'healthy' : 'diseased');
+            }
+
+            // Update result label
+            const resultLabel = document.getElementById('resultLabel');
+            if (resultLabel) {
+                resultLabel.textContent = isHealthy ? '✓ Healthy Plant' : '⚠ Disease Detected';
+                resultLabel.style.color = isHealthy ? '#10B981' : '#F59E0B';
+            }
         };
 
         document.getElementById('removeFileBtn').onclick = () => window.location.reload();
@@ -185,15 +205,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (keysList && userStr) {
         const user = JSON.parse(userStr);
         
-        // Globally accessible for the dashboard
         window.switchSection = (sectionId) => {
-            document.querySelectorAll('.dashboard-section').forEach(s => s.style.display = 'none');
-            document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
-            document.getElementById(`section-${sectionId}`).style.display = 'block';
-            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            const sections = ['overview', 'keys', 'history', 'profile'];
+            sections.forEach(s => {
+                const el = document.getElementById(`section-${s}`);
+                if (el) el.style.display = (s === sectionId) ? 'block' : 'none';
+                
+                const nav = document.getElementById(`nav-${s}`);
+                if (nav) nav.classList.toggle('active', s === sectionId);
+            });
 
             if (sectionId === 'history') loadHistory();
             if (sectionId === 'profile') loadProfile();
+            if (sectionId === 'overview' || sectionId === 'keys') loadKeys(); 
         };
 
         const loadHistory = async () => {
@@ -226,16 +250,57 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const res = await fetch(`/api/keys/?user_id=${user.id}`);
                 const keys = await res.json();
+                
+                // --- Update Overview Stats ---
+                const totalUsage = keys.reduce((sum, k) => sum + (k.usage_count || 0), 0);
+                const quotaLimit = keys.reduce((sum, k) => sum + (k.usage_limit || 1000), 0);
+                
+                const welcomeName = document.getElementById('welcome-name');
+                if (welcomeName) welcomeName.textContent = user.name;
+                
+                const totalReqEl = document.getElementById('stat-total-requests');
+                if (totalReqEl) totalReqEl.textContent = totalUsage.toLocaleString();
+                
+                const quotaCountEl = document.getElementById('stat-quota-count');
+                if (quotaCountEl) quotaCountEl.textContent = `${totalUsage}/${quotaLimit}`;
+                
+                const quotaBar = document.getElementById('stat-quota-bar');
+                if (quotaBar) quotaBar.style.width = `${Math.min((totalUsage / quotaLimit) * 100, 100)}%`;
+
+                // --- Render Keys List ---
                 if (keys.length === 0) {
-                    keysList.innerHTML = '<div class="empty-state">No keys found.</div>';
+                    keysList.innerHTML = '<div class="empty-state">No keys found. Generate one to start scanning.</div>';
                 } else {
                     keysList.innerHTML = keys.map(k => `
-                        <div class="api-key-card">
-                            <div class="api-key-info">
-                                <h4>${k.key}</h4>
-                                <div class="api-key-meta">${k.expires_at ? 'Expires: ' + new Date(k.expires_at).toLocaleDateString() : 'Lifetime Access'}</div>
+                        <div class="api-key-card" style="position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; margin-bottom: 1.25rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: var(--primary);">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
+                                    </div>
+                                    <h4 style="margin: 0;">${k.name || 'API Key'}</h4>
+                                    <span class="plan-badge">${user.plan_type || 'Free'}</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-ghost btn-sm" onclick="copyToClipboard('${k.key}')">Copy Secret</button>
+                                </div>
                             </div>
-                            <span class="status-badge status-active">ACTIVE</span>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <code style="font-family: monospace; color: var(--primary); font-size: 0.95rem;">${k.key.substring(0, 8)}••••••••••••••••</code>
+                                    <div class="api-key-meta" style="display: flex; gap: 1.5rem; font-size: 0.75rem; color: var(--text-muted);">
+                                        <span>Quota: <strong>${k.usage_count} / ${k.usage_limit}</strong></span>
+                                        <span>Last Used: <strong>${k.last_used ? new Date(k.last_used).toLocaleDateString() : 'Never'}</strong></span>
+                                    </div>
+                                </div>
+                                <div style="width: 120px;">
+                                    <div class="confidence-bar" style="height: 4px; margin-bottom: 4px;">
+                                        <div class="confidence-fill" style="width: ${(k.usage_count / k.usage_limit) * 100}%"></div>
+                                    </div>
+                                    <div style="font-size: 0.7rem; text-align: right; color: var(--text-muted);">${Math.round((k.usage_count / k.usage_limit) * 100)}% Used</div>
+                                </div>
+                            </div>
                         </div>
                     `).join('');
                 }
@@ -261,8 +326,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     const updated = await res.json();
                     if (res.ok) {
-                        localStorage.setItem('user', JSON.stringify(updated));
-                        document.getElementById('navAuth').querySelector('span').innerText = `Welcome, ${updated.name}`;
+                        sessionStorage.setItem('user', JSON.stringify(updated));
+                        navAuth.innerHTML = `
+                            <span style="color: var(--text-muted); margin-right: 15px;">Welcome, ${updated.name}</span>
+                            <button class="btn btn-ghost" onclick="logout()">Logout</button>
+                        `;
                         alert('Profile updated!');
                     }
                 } catch (e) { alert('Update failed'); }
@@ -272,11 +340,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         window.generateNewKey = async () => {
-            const res = await fetch(`/api/keys/generate?user_id=${user.id}&user_name=${user.name}`, { method: 'POST' });
-            if (res.ok) loadKeys();
+            const nameInput = document.getElementById('key-name-input');
+            const keyName = nameInput.value.trim();
+            
+            if (!keyName) {
+                alert("Please enter a name for your API key.");
+                return;
+            }
+
+            const btn = document.querySelector('[onclick="generateNewKey()"]');
+            btn.disabled = true;
+            btn.innerText = 'Generating...';
+
+            try {
+                const res = await fetch(`/api/keys/generate?user_id=${user.id}&user_name=${encodeURIComponent(user.name)}&key_name=${encodeURIComponent(keyName)}`, { 
+                    method: 'POST' 
+                });
+                
+                if (res.ok) {
+                    nameInput.value = '';
+                    loadKeys();
+                } else {
+                    const data = await res.json();
+                    alert(data.detail || "Failed to generate key.");
+                }
+            } catch (err) {
+                alert("Connection error.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Generate';
+            }
         };
 
-        loadKeys();
+        window.copyToClipboard = (text) => {
+            navigator.clipboard.writeText(text);
+            alert('Secret copied to clipboard!');
+        };
+
+        window.switchSection('overview');
     }
 
     // --- 8. Password Toggle ---
@@ -293,6 +394,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function logout() {
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     window.location.href = '/login';
 }

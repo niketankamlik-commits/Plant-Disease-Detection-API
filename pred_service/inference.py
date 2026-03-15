@@ -40,8 +40,8 @@ def process_image_and_predict(image_bytes: bytes) -> dict:
     if model is None:
         # Try loading one more time if it was missing initially 
         try:
-           if os.path.exists(model_path):
-               model = tf.keras.models.load_model(model_path)
+            if os.path.exists(model_path):
+                model = tf.keras.models.load_model(model_path)
         except Exception:
             pass
             
