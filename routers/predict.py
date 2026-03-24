@@ -49,13 +49,18 @@ async def predict_disease(
             # Increment usage
             crud.increment_key_usage(db, db_key)
             
+            # Combine recommendation with medicine and precaution for history DB
+            rec_full = result.get("recommendation", "No data")
+            if "medicine" in result and "precaution" in result:
+                rec_full += f" | Medicine: {result['medicine']} | Precaution: {result['precaution']}"
+
             # Save history linked to key
             crud.create_history_entry(db, schemas.HistoryCreate(
                 user_id=db_key.user_id,
                 api_key_id=db_key.id,
                 disease_name=result.get("disease_name", "Unknown"),
                 confidence=int(result.get("confidence", 0)),
-                recommendation=result.get("recommendation", "No data")
+                recommendation=rec_full
             ))
 
         # Return standardized JSON response
@@ -64,6 +69,8 @@ async def predict_disease(
             "disease_name": result.get("disease_name", "Unknown"),
             "confidence": round(float(result.get("confidence", 0)), 2),
             "recommendation": result.get("recommendation", "No data"),
+            "medicine": result.get("medicine", ""),
+            "precaution": result.get("precaution", ""),
             "is_healthy": result.get("is_healthy", False),
             "source": user_name
         })

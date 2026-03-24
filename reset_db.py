@@ -5,12 +5,12 @@ import os
 db_path = "plantcare.db"
 
 def reset_db():
-    if os.path.exists(db_path):
-        os.remove(db_path)
-        print(f"Deleted existing database at {db_path}")
+    print("Dropping all existing tables...")
+    Base.metadata.drop_all(bind=engine)
     
+    print("Creating all tables with new SaaS schema...")
     Base.metadata.create_all(bind=engine)
-    print("Created all tables with new SaaS schema.")
+    print("Database reset successfully.")
 
 if __name__ == "__main__":
     reset_db()

@@ -6,6 +6,7 @@ from PIL import Image
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.efficientnet import preprocess_input
 from .constants import IMG_SIZE, CLASS_NAMES
+from .disease_info import DISEASE_INFO
 from .downloader import download_model_if_missing
 
 # Try to load the model. We expect the user to place the .h5 file in this pred_service folder
@@ -87,6 +88,12 @@ def process_image_and_predict(image_bytes: bytes) -> dict:
         # Is the plant healthy?
         is_healthy = "healthy" in disease.lower()
 
+        # Get extra mapping if available
+        # The predicted_class matches keys in DISEASE_INFO
+        info = DISEASE_INFO.get(predicted_class, {})
+        medicine_text = info.get("medicine", "No specific medicine available.")
+        precaution_text = info.get("precaution", "No specific precaution available.")
+
         # Recommendation logic mapping
         if is_healthy:
             rec_text = "Great job! Your plant shows no signs of disease. Continue with your current watering and light schedule."
@@ -99,7 +106,9 @@ def process_image_and_predict(image_bytes: bytes) -> dict:
             "is_healthy": is_healthy,
             "disease_name": f"{plant} - {disease}",
             "confidence": confidence,
-            "recommendation": rec_text
+            "recommendation": rec_text,
+            "medicine": medicine_text,
+            "precaution": precaution_text
         }
         
     except Exception as e:

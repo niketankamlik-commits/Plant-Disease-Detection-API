@@ -175,11 +175,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const confidence = parseFloat(data.confidence || 0).toFixed(2);
             const recommendation = data.recommendation || 'No specific recommendation.';
             const isHealthy = data.is_healthy || diseaseName.toLowerCase().includes('healthy');
+            const medicine = data.medicine || '';
+            const precaution = data.precaution || '';
 
             document.getElementById('diseaseName').textContent = diseaseName;
             document.getElementById('confidenceText').textContent = `${confidence}%`;
             document.getElementById('confidenceLevel').style.width = `${Math.round(confidence)}%`;
             document.getElementById('recommendationText').textContent = recommendation;
+            
+            const medBox = document.getElementById('medicineBox');
+            const precBox = document.getElementById('precautionBox');
+            
+            if (!isHealthy && (medicine || precaution)) {
+                if (medicine && medicine !== 'None needed.' && medicine !== 'N/A') {
+                    medBox.style.display = 'flex';
+                    document.getElementById('medicineText').textContent = medicine;
+                } else {
+                    medBox.style.display = 'none';
+                }
+                
+                if (precaution && precaution !== 'None needed.' && precaution !== 'N/A') {
+                    precBox.style.display = 'flex';
+                    document.getElementById('precautionText').textContent = precaution;
+                } else {
+                    precBox.style.display = 'none';
+                }
+            } else {
+                if (medBox) medBox.style.display = 'none';
+                if (precBox) precBox.style.display = 'none';
+            }
 
             // Color the status indicator based on result
             const statusEl = document.getElementById('resultStatus');
