@@ -1,0 +1,106 @@
+/* ===== UPLOAD / SCAN PAGE ===== */
+.upload-main {
+    min-height: calc(100vh - 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1.5rem 2rem;
+}
+
+.upload-container { width: 100%; max-width: 800px; padding: 3rem; text-align: center; }
+
+.upload-header { margin-bottom: 2rem; }
+
+.upload-zone {
+    border: 2px dashed var(--glass-highlight);
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.upload-zone.drag-active {
+    border-color: var(--primary);
+    background: rgba(16, 185, 129, 0.1);
+    transform: scale(1.02);
+}
+
+.upload-content { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+
+.upload-icon {
+    width: 80px; height: 80px;
+    color: var(--primary);
+    margin: 0 auto 1rem auto;
+    filter: drop-shadow(0 0 10px var(--primary-glow));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.upload-icon svg { width: 100%; height: 100%; }
+
+.file-hint { display: block; font-size: 0.875rem; color: var(--text-muted); margin-top: 1rem; }
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--glass-highlight);
+}
+
+.preview-actions { display: flex; gap: 1rem; }
+.preview-content { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+
+/* Analyzing state */
+.scan-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+}
+
+.scan-image-wrapper { position: relative; width: 100%; display: flex; }
+
+#scanImagePreview { width: 100%; filter: contrast(1.2) sepia(0.2) hue-rotate(100deg); }
+
+.scan-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(16,185,129,0) 0%, rgba(16,185,129,0.1) 50%, rgba(16,185,129,0) 100%);
+    background-size: 100% 200%;
+    animation: scan-pulse 2s infinite linear;
+}
+
+.scan-line-active {
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%; height: 2px;
+    background: #10B981;
+    box-shadow: 0 0 15px 5px rgba(16, 185, 129, 0.6);
+    animation: scan-move 3s infinite ease-in-out;
+}
+
+@keyframes scan-move {
+    0% { top: 0%; }
+    50% { top: 100%; }
+    100% { top: 0%; }
+}
+
+/* Alias for dashboard */
+@keyframes scanMove {
+    0% { top: 0%; }
+    50% { top: 100%; }
+    100% { top: 0%; }
+}
+
+@keyframes scan-pulse {
+    0% { background-position: 0% -100%; }
+    100% { background-position: 0% 100%; }
+}

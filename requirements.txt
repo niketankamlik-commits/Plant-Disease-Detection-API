@@ -8,3 +8,4 @@ bcrypt
 pydantic[email]
 gdown
 requests
+python-dotenv

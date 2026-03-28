@@ -1,0 +1,98 @@
+/* ===== AUTH / FORMS ===== */
+.auth-main {
+    min-height: calc(100vh - 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1.5rem 2rem;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 3rem;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+}
+
+.auth-header { text-align: center; margin-bottom: 2.5rem; }
+.auth-header h2 { font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+
+.auth-form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.form-group { display: flex; flex-direction: column; gap: 0.5rem; text-align: left; }
+.form-group label { font-size: 0.875rem; font-weight: 500; color: var(--text-main); padding-left: 0.25rem; }
+
+.input-wrapper { position: relative; display: flex; align-items: center; }
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    width: 20px; height: 20px;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.input-wrapper input,
+.glass-input {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 3rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-main);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.glass-input { padding-left: 1rem; }
+
+.input-wrapper input:focus,
+.glass-input:focus {
+    border-color: rgba(16, 185, 129, 0.5);
+    background: rgba(16, 185, 129, 0.02);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.eye-btn {
+    position: absolute;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-options { display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+
+.checkbox-container { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-muted); }
+.checkmark { width: 18px; height: 18px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.checkbox-container input { display: none; }
+.checkbox-container input:checked ~ .checkmark { background: var(--primary); border-color: var(--primary); }
+.checkbox-container input:checked ~ .checkmark::after { content: ""; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); margin-bottom: 2px; }
+
+.forgot-link { color: var(--primary); text-decoration: none; }
+
+.auth-switch { text-align: center; margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-muted); }
+.auth-switch a { color: var(--primary); text-decoration: none; font-weight: 500; }
+
+.divider { display: flex; align-items: center; text-align: center; margin: 1.5rem 0; color: var(--text-muted); font-size: 0.875rem; }
+.divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--glass-border); }
+.divider span { padding: 0 1rem; }
+
+/* Info Page */
+.info-main { min-height: calc(100vh - 2rem); padding: 5rem 1.5rem 2rem; display: flex; align-items: flex-start; justify-content: center; }
+.info-container { width: 100%; max-width: 800px; padding: 3rem; }
+.info-header { text-align: center; margin-bottom: 3rem; }
+.info-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
+.info-card { background: rgba(16, 185, 129, 0.05); border: 1px solid var(--glass-border); border-radius: 16px; padding: 2rem; transition: transform 0.3s ease; }
+.info-card:hover { transform: translateY(-5px); background: rgba(16, 185, 129, 0.1); }
+.info-card h3 { color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.info-card p, .info-card li { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; }
+.info-card ul { padding-left: 1.5rem; margin-top: 1rem; }
+.info-card li { margin-bottom: 0.5rem; }
+.action-container { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); }

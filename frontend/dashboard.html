@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - PlantCare AI</title>
+    <title>Dashboard - Phyto-Scan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,18 +12,17 @@
 <body>
     <div class="bg-animated">
         <div class="hero-bg-image"></div>
-        <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-        <div class="blob blob3"></div>
-        <div class="noise-overlay"></div>
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
 
     <nav class="glass-nav">
         <div class="nav-container">
-            <a href="/" class="logo" style="text-decoration: none; color: inherit;">
-                <img src="/frontend/logo.png" alt="Phyto-Scan Logo" class="logo-image" style="height: 48px; width: auto; filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));">
-                <span class="logo-text">PHYTO-<span class="highlight">SCAN</span></span>
-            </a>
+            <div class="logo">
+                <img src="/frontend/logo.png" alt="Phyto-Scan" class="logo-icon">
+                <span>Phyto<span class="highlight">Scan</span></span>
+            </div>
             <div class="auth-buttons" id="navAuth">
                 <button class="btn btn-ghost">Loading...</button>
             </div>
@@ -37,6 +36,10 @@
                     <button onclick="switchSection('overview')" id="nav-overview" class="sidebar-item active">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         Overview
+                    </button>
+                    <button onclick="switchSection('scan')" id="nav-scan" class="sidebar-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        New Scan
                     </button>
                     <button onclick="switchSection('keys')" id="nav-keys" class="sidebar-item">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -68,8 +71,8 @@
                 <div id="section-overview" class="dashboard-section">
                     <div class="section-header">
                         <div>
-                            <h2>Welcome, <span id="welcome-name" class="highlight">Developer</span></h2>
-                            <p>Here is your API usage overview for this month.</p>
+                            <h2>Overview</h2>
+                            <p>Your API usage summary for this month.</p>
                         </div>
                     </div>
 
@@ -77,7 +80,6 @@
                         <div class="stat-card glass-panel" style="padding: 1.5rem; text-align: left;">
                             <p class="result-meta-label">Total Requests</p>
                             <h3 id="stat-total-requests" style="font-size: 2rem;">0</h3>
-                            <div class="mini-trend" style="color: #10B981; font-size: 0.8rem; margin-top: 0.5rem;">↑ 12% from last week</div>
                         </div>
                         <div class="stat-card glass-panel" style="padding: 1.5rem; text-align: left;">
                             <p class="result-meta-label">Success Rate</p>
@@ -156,6 +158,106 @@ curl -X POST http://127.0.0.1:8000/api/predict \
                     </div>
                 </div>
 
+                <!-- Scan Section -->
+                <div id="section-scan" class="dashboard-section" style="display: none;">
+                    <div class="section-header">
+                        <div>
+                            <h2>Plant <span class="highlight">Scan</span></h2>
+                            <p>Upload a clear image of the affected plant leaf for accurate disease detection.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="upload-zone" id="dropZone" style="margin-top: 1rem; border: 2px dashed rgba(255,255,255,0.1); border-radius: 20px; padding: 3rem; text-align: center; transition: all 0.3s ease; position: relative; min-height: 400px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02);">
+                        <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp" hidden>
+                        
+                        <div class="upload-content" id="uploadContent">
+                            <div class="upload-icon" style="background: rgba(16, 185, 129, 0.1); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--primary);">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16A4 4 0 0 1 7 8H8.8C9.5 5.6 11.6 4 14 4C17.3 4 20 6.7 20 10C20 10.5 19.9 11 19.8 11.5C21.6 12.3 22.8 14 22.8 16C22.8 18.2 21 20 18.8 20H7C4.2 20 2 17.8 2 15C2 12.4 4 10.3 6.5 10" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11V16" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 13L12 10L15 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <h3>Drag & Drop your image here</h3>
+                            <p style="color: var(--text-muted); margin: 0.5rem 0 1.5rem;">or</p>
+                            <button class="btn btn-primary" id="browseBtn">Browse Files</button>
+                            <span class="file-hint" style="display: block; margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">Supported formats: JPEG, PNG, WEBP (Max 5MB)</span>
+                        </div>
+
+                        <div class="preview-content" id="previewContent" style="display: none; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%;">
+                            <img id="imagePreview" src="" alt="Plant Preview" style="max-width: 100%; max-height: 300px; border-radius: 12px; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                            <div class="preview-actions" style="display: flex; gap: 1rem;">
+                                <button class="btn btn-outline" id="removeFileBtn">Remove</button>
+                                <button class="btn btn-primary" id="analyzeBtn">Analyze Image</button>
+                            </div>
+                        </div>
+                        
+                        <div class="analyzing-content" id="analyzingContent" style="display: none; flex-direction: column; align-items: center; gap: 1.5rem;">
+                            <div class="scan-container" style="position: relative; width: 200px; height: 200px; border-radius: 12px; overflow: hidden;">
+                                <img id="scanImagePreview" src="" alt="Scanning..." style="width: 100%; height: 100%; object-fit: cover;">
+                                <div class="scan-overlay" style="position: absolute; inset: 0; background: rgba(16, 185, 129, 0.2);"></div>
+                                <div class="scan-line-active" style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--primary); box-shadow: 0 0 15px var(--primary); animation: scanMove 2s infinite ease-in-out;"></div>
+                            </div>
+                            <h3>Analyzing Plant Data...</h3>
+                        </div>
+                        
+                        <div class="results-content" id="resultsContent" style="display: none; width: 100%; text-align: left;">
+                            <div class="result-card glass-panel" style="padding: 2rem;">
+                                <div class="result-status-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+                                    <div class="result-status-badge" id="resultStatus" style="padding: 0.5rem 1rem; border-radius: 50px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                                        <span id="resultLabel" style="font-weight: 600; color: var(--primary);">Analysis Complete</span>
+                                    </div>
+                                </div>
+
+                                <div class="result-disease-block" style="margin-bottom: 1.25rem;">
+                                    <p class="result-meta-label" style="text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.65rem; color: var(--text-muted); margin-bottom: 0.5rem;">Detected Condition</p>
+                                    <h2 id="diseaseName" class="result-disease-name" style="font-size: 1.35rem; margin: 0; display: inline-block; padding: 0.5rem 1rem; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 10px; color: #fff;">—</h2>
+                                </div>
+
+                                <div class="result-confidence-block" style="margin-bottom: 2rem;">
+                                    <div class="result-confidence-header" style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span class="result-meta-label">Confidence Score</span>
+                                        <span id="confidenceText" class="result-confidence-value" style="font-weight: 700; color: var(--primary);">—</span>
+                                    </div>
+                                    <div class="confidence-bar" style="height: 8px; background: rgba(255,255,255,0.05); border-radius: 50px; overflow: hidden;">
+                                        <div class="confidence-fill" id="confidenceLevel" style="width: 0%; height: 100%; background: var(--primary); transition: width 1s ease-out;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Medicine -->
+                                <div class="recommendation-box" id="medicineBox" style="padding: 1.25rem; background: rgba(16, 185, 129, 0.08); border-left: 4px solid var(--primary); border-radius: 8px; display: none; gap: 1rem; align-items: flex-start; margin-top: 1rem;">
+                                    <div class="recommendation-icon" style="color: var(--primary);">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 11V9a2 2 0 0 0-2-2h-3.6c-.6-1.2-1.9-2-3.4-2-2.2 0-4 1.8-4 4 0 1.3.6 2.5 1.6 3.2M10 13a5 5 0 0 0-1.6 8.3L13 22l6.2-7.1c1-1.2 1.3-2.9.7-4.4M16 11l-4 4-2-2"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0 0 0.25rem; font-size: 0.85rem; color: var(--primary);">Treatment Recommendation</h4>
+                                        <p id="medicineText" style="margin: 0; font-size: 0.9rem;"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Precaution -->
+                                <div class="recommendation-box" id="precautionBox" style="padding: 1.25rem; background: rgba(245, 158, 11, 0.08); border-left: 4px solid var(--accent); border-radius: 8px; display: none; gap: 1rem; align-items: flex-start; margin-top: 1rem;">
+                                    <div class="recommendation-icon" style="color: var(--accent);">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0 0 0.25rem; font-size: 0.85rem; color: var(--accent);">Key Precautions</h4>
+                                        <p id="precautionText" style="margin: 0; font-size: 0.9rem;"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Local Recommendation (Reduced and at last) -->
+                                <div class="recommendation-box" id="recommendationBox" style="padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(255, 255, 255, 0.1); border-radius: 8px; display: none; gap: 0.75rem; align-items: flex-start; margin-top: 2rem;">
+                                    <div>
+                                        <h4 style="margin: 0 0 0.25rem; font-size: 0.7rem; color: var(--text-muted);">General Advice</h4>
+                                        <p id="recommendationText" style="margin: 0; font-size: 0.8rem; color: var(--text-muted);">Awaiting analysis...</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-outline" id="resetBtn" style="margin-top: 2rem; width: 100%;">
+                                    Scan Another Plant
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Profile Section -->
                 <div id="section-profile" class="dashboard-section" style="display: none;">
                     <div class="section-header">
@@ -178,7 +280,25 @@ curl -X POST http://127.0.0.1:8000/api/predict \
                 </div>
             </section>
         </div>
+        <footer class="glass-footer" style="margin-top: 4rem; padding: 3rem 2rem; border-top: 1px solid var(--glass-border); text-align: center; position: relative; z-index: 10;">
+            <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
+                <div class="logo" style="opacity: 0.8; transform: scale(0.9);">
+                    <img src="/frontend/logo.png" alt="Phyto-Scan" class="logo-icon">
+                    <span>Phyto<span class="highlight">Scan</span></span>
+                </div>
+                <div style="display: flex; gap: 2rem; font-size: 0.85rem; color: var(--text-muted);">
+                    <a href="#" style="color: inherit; text-decoration: none; transition: var(--transition-smooth);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Privacy Policy</a>
+                    <a href="#" style="color: inherit; text-decoration: none; transition: var(--transition-smooth);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Terms of Service</a>
+                    <a href="#" style="color: inherit; text-decoration: none; transition: var(--transition-smooth);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">Contact</a>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.6;">&copy; 2026 Phyto-Scan AI. Modernizing plant pathology.</p>
+            </div>
+        </footer>
     </main>
-    <script src="/frontend/script.js"></script>
+    <script src="/frontend/js/ui.js"></script>
+    <script src="/frontend/js/auth.js"></script>
+    <script src="/frontend/js/upload.js"></script>
+    <script src="/frontend/js/dashboard.js"></script>
+
 </body>
 </html>

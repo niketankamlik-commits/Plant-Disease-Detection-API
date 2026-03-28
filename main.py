@@ -1,9 +1,14 @@
 import os
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+import pathlib
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = os.getenv("TF_ENABLE_ONEDNN_OPTS", "0")
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = os.getenv("TF_CPP_MIN_LOG_LEVEL", "2")
 
 from fastapi import FastAPI
-import pathlib
 
 # Import routes
 from routers import home, upload, predict, auth, info, apikey
@@ -43,4 +48,6 @@ app.include_router(apikey.router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    host = os.getenv("APP_HOST", "127.0.0.1")
+    port = int(os.getenv("APP_PORT", 8000))
+    uvicorn.run(app, host=host, port=port)

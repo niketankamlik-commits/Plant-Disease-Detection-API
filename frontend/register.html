@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - PlantCare AI</title>
+    <title>Register - Phyto-Scan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,18 +12,17 @@
 <body>
     <div class="bg-animated">
         <div class="hero-bg-image"></div>
-        <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-        <div class="blob blob3"></div>
-        <div class="noise-overlay"></div>
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
 
     <nav class="glass-nav">
         <div class="nav-container">
-            <a href="/" class="logo" style="text-decoration: none; color: inherit;">
-                <img src="/frontend/logo.png" alt="Phyto-Scan Logo" class="logo-image" style="height: 48px; width: auto; filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));">
-                <span class="logo-text">PHYTO-<span class="highlight">SCAN</span></span>
-            </a>
+            <div class="logo">
+                <img src="/frontend/logo.png" alt="Phyto-Scan" class="logo-icon">
+                <span>Phyto<span class="highlight">Scan</span></span>
+            </div>
             <div class="auth-buttons">
                 <a href="/login" class="btn btn-ghost" style="text-decoration: none;">Login</a>
             </div>
@@ -33,7 +32,7 @@
     <main class="auth-main">
         <div class="auth-container glass-panel fade-in-blur stagger-1">
             <div class="auth-header">
-                <h2>Join <span class="highlight">PlantCare AI</span></h2>
+                <h2>Join <span class="highlight">Phyto-Scan</span></h2>
                 <p>Create an account to track your plant's health over time.</p>
             </div>
 
@@ -63,7 +62,12 @@
                 <p class="auth-switch">Already have an account? <a href="/login">Log in</a></p>
             </form>
         </div>
+        <footer class="glass-footer" style="margin-top: 4rem; padding: 2rem; border-top: 1px solid var(--glass-border); text-align: center; position: relative; z-index: 10;">
+            <p style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.6;">&copy; 2026 Phyto-Scan AI.</p>
+        </footer>
     </main>
-    <script src="/frontend/script.js"></script>
+    <script src="/frontend/js/ui.js"></script>
+    <script src="/frontend/js/auth.js"></script>
+
 </body>
 </html>

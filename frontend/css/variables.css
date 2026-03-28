@@ -1,0 +1,25 @@
+/* ===== DESIGN TOKENS ===== */
+:root {
+    /* Color Palette */
+    --bg-dark: #010804;
+    --primary: #10B981;
+    --primary-hover: #059669;
+    --primary-glow: rgba(16, 185, 129, 0.4);
+    --secondary: #064E3B;
+    --accent: #F59E0B;
+    --accent-glow: rgba(245, 158, 11, 0.3);
+
+    --text-main: #FFFFFF;
+    --text-muted: #9CA3AF;
+
+    /* Glassmorphism Tokens */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-highlight: rgba(255, 255, 255, 0.12);
+    --panel-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.8), 0 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+    --font-sans: 'Outfit', 'Inter', -apple-system, sans-serif;
+    --border-radius: 20px;
+}

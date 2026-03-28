@@ -6,31 +6,17 @@ from PIL import Image
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.efficientnet import preprocess_input
 from .constants import IMG_SIZE, CLASS_NAMES
-from .disease_info import DISEASE_INFO
+# from .disease_info import DISEASE_INFO  # Local data removed in favor of LLM
 from .downloader import download_model_if_missing
 from .external_api import get_external_prediction
 
-# Try to load the model. We expect the user to place the .h5 file in this pred_service folder
+# Configuration for the model
 model_path = os.path.join(os.path.dirname(__file__), "plant_disease_recog_model_pwp.h5")
-
 # --- CLOUD DEPLOYMENT URL ---
-# Replace this with your Google Drive direct link, AWS S3 link, or Hugging Face model link!
 MODEL_URL = "https://drive.google.com/file/d/14y3Jp8-hB7v3q1HosU0cxOP9TM2e7h1j/view?usp=drive_link"
 
-# If the file is missing (e.g. during a fresh deployment online), try to download it first
-download_model_if_missing(model_path, MODEL_URL)
-
-# We defer failing until the prediction is called in case the file isn't there right at app startup
+# We defer loading until the prediction is called to speed up server startup
 model = None
-try:
-    if os.path.exists(model_path):
-        model = tf.keras.models.load_model(model_path)
-        print(f"Successfully loaded model from {model_path}")
-    else:
-        print(f"Warning: Model file not found at {model_path}. Please place it there.")
-except Exception as e:
-    print(f"Error loading model: {e}")
-
 
 def process_image_and_predict(image_bytes: bytes) -> dict:
     """
@@ -40,30 +26,36 @@ def process_image_and_predict(image_bytes: bytes) -> dict:
     global model
     
     if model is None:
-        # Try loading one more time if it was missing initially 
+        # Load the model only when needed
         try:
-            if os.path.exists(model_path):
-                model = tf.keras.models.load_model(model_path)
-        except Exception:
-            pass
+            # First, ensure the model exists (download if missing)
+            download_model_if_missing(model_path, MODEL_URL)
             
-    if model is None:
-        return {
-            "success": False,
-            "error": "The Machine Learning model is not loaded. Please ensure plant_disease_recog_model_pwp.h5 is inside the pred_service folder."
-        }
+            if os.path.exists(model_path):
+                print(f"Loading model for the first time from {model_path}...")
+                model = tf.keras.models.load_model(model_path)
+                print("Model loaded successfully.")
+            else:
+                return {
+                    "success": False,
+                    "error": f"Model file not found at {model_path}."
+                }
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            return {
+                "success": False,
+                "error": f"Failed to load the Machine Learning model: {str(e)}"
+            }
 
     try:
-        # Use the exact Keras logic provided by the user
-        # We wrap image_bytes in io.BytesIO so image.load_img can read it directly from memory
+        # Wrap image_bytes in io.BytesIO so image.load_img can read it from memory
         img = image.load_img(io.BytesIO(image_bytes), target_size=IMG_SIZE)
         img_array = image.img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0)
 
         img_array = preprocess_input(img_array)
 
-        # Optimization: Calling the model directly is significantly faster than model.predict() 
-        # for single image arrays, as it skips all the overhead of setting up training/batch batches.
+        # Prediction
         predictions = model(img_array, training=False).numpy()
 
         predicted_index = np.argmax(predictions[0])
@@ -89,15 +81,15 @@ def process_image_and_predict(image_bytes: bytes) -> dict:
         # Is the plant healthy?
         is_healthy = "healthy" in disease.lower()
 
-        # Get extra mapping if available
-        # The predicted_class matches keys in DISEASE_INFO
-        info = DISEASE_INFO.get(predicted_class, {})
-        medicine_text = info.get("medicine", "No specific medicine available.")
-        precaution_text = info.get("precaution", "No specific precaution available.")
+        # Get AI advice from OpenRouter
+        from .llm_service import get_medicine_advice
+        advice = get_medicine_advice(plant, disease, is_healthy)
+        medicine_text = advice.get("medicine")
+        precaution_text = advice.get("precaution")
 
         # Recommendation logic mapping
         if is_healthy:
-            rec_text = "Great job! Your plant shows no signs of disease. Continue with your current watering and light schedule."
+            rec_text = f"Great job! Your {plant} shows no signs of disease. Continue with your current watering and light schedule."
         else:
             rec_text = f"Isolate the {plant} plant to prevent spread. Apply appropriate treatments for {disease} and monitor frequently."
 
@@ -114,8 +106,6 @@ def process_image_and_predict(image_bytes: bytes) -> dict:
         }
 
         # --- FALLBACK LOGIC ---
-        # If the model detects 'No Leaf' (Background_without_leaves) OR confidence is very low,
-        # we consult the "legit" external API for a more accurate second opinion.
         is_background = (predicted_class == 'Background_without_leaves')
         
         if is_background or confidence < 40:

@@ -40,9 +40,35 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navAuth && userStr) {
         const user = JSON.parse(userStr);
         navAuth.innerHTML = `
-            <span style="color: var(--text-muted); margin-right: 15px;">Welcome, ${user.name}</span>
-            <button class="btn btn-ghost" onclick="logout()">Logout</button>
+            <span style="color: var(--text-muted); margin-right: 15px; font-size: 0.9rem;">Welcome, ${user.name}</span>
+            <button class="btn btn-ghost" onclick="logout()" style="font-size: 0.85rem;">Logout</button>
         `;
+    }
+
+    // --- 3.1 Scanner Modal Logic (Index) ---
+    const scannerModal = document.getElementById('scannerModal');
+    const openScannerBtn = document.getElementById('openScannerBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    if (openScannerBtn && scannerModal) {
+        openScannerBtn.addEventListener('click', () => {
+            scannerModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                scannerModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        scannerModal.addEventListener('click', (e) => {
+            if (e.target === scannerModal) {
+                scannerModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
     }
 
     // --- 4. Login Form Logic ---
@@ -212,10 +238,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('diseaseName').textContent = diseaseName;
             document.getElementById('confidenceText').textContent = `${confidence}%`;
             document.getElementById('confidenceLevel').style.width = `${Math.round(confidence)}%`;
-            document.getElementById('recommendationText').textContent = recommendation;
             
-            const sourceTextEl = document.getElementById('serviceSourceText');
-            if (sourceTextEl) sourceTextEl.textContent = predictionSource;
+            const recBox = document.getElementById('recommendationBox');
+            if (recBox) {
+                recBox.style.display = recommendation ? 'block' : 'none';
+                document.getElementById('recommendationText').textContent = recommendation;
+            }
 
             const medBox = document.getElementById('medicineBox');
             const precBox = document.getElementById('precautionBox');
@@ -252,6 +280,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultLabel.textContent = isHealthy ? '✓ Healthy Plant' : '⚠ Disease Detected';
                 resultLabel.style.color = isHealthy ? '#10B981' : '#F59E0B';
             }
+
+            // --- REFRESH DASHBOARD CONTEXT ---
+            if (typeof loadHistory === 'function') loadHistory();
+            if (typeof loadKeys === 'function') loadKeys();
         };
 
         document.getElementById('removeFileBtn').onclick = () => window.location.reload();
@@ -264,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = JSON.parse(userStr);
 
         window.switchSection = (sectionId) => {
-            const sections = ['overview', 'keys', 'history', 'profile'];
+            const sections = ['overview', 'scan', 'keys', 'history', 'profile'];
             sections.forEach(s => {
                 const el = document.getElementById(`section-${s}`);
                 if (el) el.style.display = (s === sectionId) ? 'block' : 'none';
@@ -313,9 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const totalUsage = keys.reduce((sum, k) => sum + (k.usage_count || 0), 0);
                 const quotaLimit = keys.reduce((sum, k) => sum + (k.usage_limit || 1000), 0);
 
-                const welcomeName = document.getElementById('welcome-name');
-                if (welcomeName) welcomeName.textContent = user.name;
-
                 const totalReqEl = document.getElementById('stat-total-requests');
                 if (totalReqEl) totalReqEl.textContent = totalUsage.toLocaleString();
 
@@ -361,6 +390,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     `).join('');
+
+                    // --- AUTO-SELECT FIRST KEY AS ACTIVE ---
+                    if (!sessionStorage.getItem('active_api_key') && keys.length > 0) {
+                        sessionStorage.setItem('active_api_key', keys[0].key);
+                        console.log("Auto-selected API Key:", keys[0].name);
+                    }
                 }
             } catch (err) { console.error(err); }
         };
